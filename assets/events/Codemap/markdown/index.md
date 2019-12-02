@@ -4,7 +4,6 @@ path: /event/Codemap
 date: 27/05/2018
 name: Codemap
 ---
-
 1. CODEMAPS 2018 là gì?
 
 CodeMaps 2018 là sự kiện thường niên tổ chức bởi Vietcode Project với mục đích định hướng giúp các bạn trẻ tại Hà Nội có một cái nhìn tổng thể và đúng đắn về Công nghệ Thông tin. Đến với CodeMaps, người tham dự sẽ được nghe chia sẻ từ các chuyên gia trong ngành về nhiều lĩnh vực khác nhau như Machine Learning, Mobile Apps, cùng với việc trải nghiệm các sản phẩm công nghệ mới nhất hiện nay.
