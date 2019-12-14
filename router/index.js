@@ -1,15 +1,17 @@
 const Router = require("express").Router();
-const fsHelpers = require("../filesystem_helpers");
+const helpers = require("../helpers");
 const fs = require("fs"),
+    fsPromises = fs.promises,
     showdown = require("showdown"),
-    converter = new showdown.Converter(),
-    fsPromises = fs.promises;
+    converter = new showdown.Converter();
+
+
 
 Router.get("/posts", (req, res) => {
     fsPromises.readdir("./assets/posts")
     .then((posts) => {
         let titles = [];
-        Promise.all(fsHelpers.getPosts(posts))
+        Promise.all(helpers.getPosts(posts))
         .then(data => {
             data.forEach((post) => {
                 let _post = JSON.parse(post);
@@ -21,9 +23,30 @@ Router.get("/posts", (req, res) => {
     })
 });
 
+Router.get("/posts/:title", (req, res) => {
+    helpers.getPost(req.params.title)
+    .then((data) => {
+        let html = converter.makeHtml(data.normalize());
+        res.send(html);
+    })
+    .catch(console.log);
+})
+
+Router.post("/posts", (req, res) => {
+    helpers.createPost(req.body)
+    .then((data) => {
+        res.json(data);
+        helpers.log({
+            message: "Successfully create post",
+            data
+        }, false);
+    })
+    .catch((error) => res.json(error));
+});
+
 Router.get("/events", (req, res) => {
-    fsPromises.readdir("./assets/events")
-    .then(data => res.json(data))
+    helpers.getEvents()
+    .then((data) => res.json(data))
     .catch(console.log);
 });
 
