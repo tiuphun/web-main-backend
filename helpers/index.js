@@ -13,7 +13,7 @@ function getPosts(dirs) {
     dirs.forEach((dir) => {
         promises.push(
             fsPromises.readFile(
-            `./assets/posts/${dir}/data.json`,
+            `./public/posts/${dir}/data.json`,
             'utf8'
         ));
     })
@@ -23,12 +23,12 @@ function getPosts(dirs) {
 function createPost({author, title, markdown}) {
     let dirName = title.toLowerCase().split(' ').join('_');
     return new Promise((resolve, reject) => {
-        fsPromises.mkdir(`./assets/posts/${dirName}`)
+        fsPromises.mkdir(`./public/posts/${dirName}`)
         .then(() => {
             let promises = [
                 // Create data.json file
                 fsPromises.writeFile(
-                    `./assets/posts/${dirName}/data.json`,
+                    `./public/posts/${dirName}/data.json`,
                     JSON.stringify({
                         date: new Date(),
                         author,
@@ -36,7 +36,7 @@ function createPost({author, title, markdown}) {
                     })),
                 // Create markdown file 
                 fsPromises.writeFile(
-                    `./assets/posts/${dirName}/index.md`,
+                    `./public/posts/${dirName}/index.md`,
                     markdown)
             ];
             Promise.all(promises)
@@ -55,18 +55,18 @@ function getPost(title) {
     let promises = [
         // fetch metadata
         fsPromises.readFile(
-            `./assets/posts/${dirName}/data.json`,
+            `./public/posts/${dirName}/data.json`,
             'utf8'),
         // fetch content
         fsPromises.readFile(
-            `./assets/posts/${dirName}/index.md`,
+            `./public/posts/${dirName}/index.md`,
             'utf8')
     ];
     return Promise.all(promises)
 }
 
 function getEvents() {
-    return fsPromises.readdir("./assets/events") 
+    return fsPromises.readdir("./public/events") 
 }
 
 module.exports = {
