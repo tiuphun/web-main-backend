@@ -20,7 +20,7 @@ function getPosts(dirs) {
     return promises;
 }
 
-function createPost({title, markdown}) {
+function createPost({author, title, markdown}) {
     let dirName = title.toLowerCase().split(' ').join('_');
     return new Promise((resolve, reject) => {
         fsPromises.mkdir(`./assets/posts/${dirName}`)
@@ -30,7 +30,8 @@ function createPost({title, markdown}) {
                 fsPromises.writeFile(
                     `./assets/posts/${dirName}/data.json`,
                     JSON.stringify({
-                        date: new Date(), 
+                        date: new Date(),
+                        author,
                         title
                     })),
                 // Create markdown file 
@@ -41,7 +42,8 @@ function createPost({title, markdown}) {
             Promise.all(promises)
             .then((data) => resolve({
                 message: "Successfully create new post", 
-                title
+                title,
+                author
             }));
         })
         .catch((error) => reject(error))
@@ -50,9 +52,17 @@ function createPost({title, markdown}) {
 
 function getPost(title) {
     let dirName = title.toLowerCase().split(' ').join('_');
-    return fsPromises.readFile(
-        `./assets/posts/${dirName}/index.md`,
-        'utf8');
+    let promises = [
+        // fetch metadata
+        fsPromises.readFile(
+            `./assets/posts/${dirName}/data.json`,
+            'utf8'),
+        // fetch content
+        fsPromises.readFile(
+            `./assets/posts/${dirName}/index.md`,
+            'utf8')
+    ];
+    return Promise.all(promises)
 }
 
 function getEvents() {

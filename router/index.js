@@ -25,9 +25,10 @@ Router.get("/posts", (req, res) => {
 
 Router.get("/posts/:title", (req, res) => {
     helpers.getPost(req.params.title)
-    .then((data) => {
-        let html = converter.makeHtml(data.normalize());
-        res.send(html);
+    .then((post) => {
+        let metaData = JSON.parse(post[0]);
+        let html = converter.makeHtml(post[1].normalize());
+        res.json({html, metaData});
     })
     .catch(console.log);
 })
