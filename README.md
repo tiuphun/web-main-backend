@@ -37,7 +37,7 @@ Routes:
 
 ## :rocket: Develop
 
-All routes are inside of /routes/ directory.
+All routes are inside of /router/ directory.
 Helper functions are in /helpers/ directory.
 Posts are stored in /assets/posts/ directory and follows the format:
 - The name of the directory is the title of the post with all lowercase characters and replaced whitespace with underscore character (_).
