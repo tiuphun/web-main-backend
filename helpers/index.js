@@ -1,5 +1,29 @@
 const fs = require("fs"),
-    fsPromises = fs.promises;
+    fsPromises = fs.promises,
+    os = require("os");
+
+function getIP() {
+    let ifaces = os.networkInterfaces();
+
+    let IPs = [];
+
+    Object.keys(ifaces).forEach((ifname) => {
+        if (ifname !== 'Wi-Fi') {
+            return;
+        }
+
+        ifaces[ifname].forEach((iface) => {
+            if('IPv4' !== iface.family || iface.internal !== false) {
+                return;
+            } else {
+                IPs.push(iface.address);
+                console.log(iface);
+            }
+        })
+    });
+    console.log(IPs);
+    return IPs[0];
+}
 
 function log({message, data}, error) {
     let errorMessage = "There was an error!";
@@ -70,6 +94,7 @@ function getEvents() {
 }
 
 module.exports = {
+    getIP,
     getPosts,
     getPost,
     createPost,
