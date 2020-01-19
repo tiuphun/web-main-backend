@@ -19,21 +19,9 @@ const mime = {
 
 const {base_url} = require("../config.json");
 
-Router.get("/posts", (req, res) => {
-    fsPromises.readdir("./public/posts")
-    .then((posts) => {
-        let titles = [];
-        Promise.all(helpers.getPosts(posts))
-        .then(data => {
-            data.forEach((post) => {
-                let _post = JSON.parse(post);
-                titles.push(_post.title);
-            });
-            res.json(titles);
-        })
-        .catch(console.log)
-    })
-});
+Router.post("/login", (req, res) => {
+
+})
 
 Router.get("/posts/:title", (req, res) => {
     helpers.getPost(req.params.title)
@@ -46,7 +34,8 @@ Router.get("/posts/:title", (req, res) => {
 })
 
 Router.post("/posts", (req, res) => {
-    helpers.createPost(req.body)
+    console.log({...req.body, author: req.user.name});
+    helpers.createPost({...req.body, author: req.user.name})
     .then((data) => {
         res.json(data);
         helpers.log({
