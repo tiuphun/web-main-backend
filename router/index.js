@@ -19,10 +19,6 @@ const mime = {
 
 const base_url = path.dirname(__dirname);
 
-Router.post("/login", (req, res) => {
-
-})
-
 Router.get("/posts/:title", (req, res) => {
     helpers.getPost(req.params.title)
     .then((post) => {
@@ -32,19 +28,6 @@ Router.get("/posts/:title", (req, res) => {
     })
     .catch(console.log);
 })
-
-Router.post("/posts", (req, res) => {
-    console.log({...req.body, author: req.user.name});
-    helpers.createPost({...req.body, author: req.user.name})
-    .then((data) => {
-        res.json(data);
-        helpers.log({
-            message: "Successfully create post",
-            data
-        }, false);
-    })
-    .catch((error) => res.json(error));
-});
 
 Router.get("/events", (req, res) => {
     helpers.getEvents()

@@ -51,10 +51,11 @@ function createPost({author, title, markdown}) {
                 // Create data.json file 
                 fsPromises.writeFile(`./public/posts/${dirName}/data.json`, 
                     JSON.stringify({ date: new Date(), author, title })
-                ), // Create markdown file 
-                    fsPromises.writeFile(
-                        `./public/posts/${dirName}/index.md`,
-                        markdown)
+                ), 
+                // Create markdown file 
+                fsPromises.writeFile(
+                    `./public/posts/${dirName}/index.md`,
+                    markdown)
             ];
             Promise.all(promises)
             .then((data) => resolve({

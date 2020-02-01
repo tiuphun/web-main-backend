@@ -1,19 +1,26 @@
 const Router = require('express').Router();
 const request = require('request');
 const helpers = require('../../helpers');
+const passport = require('passport');
+const {User} = require('../../mongoose_models');
 
-Router.use(authenticate);
+// Router.use(authenticate);
+
+Router.post("/login", (req, res) => {
+    console.log(req);
+})
 
 Router.post("/posts", (req, res) => {
-    helpers.createPost({...req.body, author: req.user.name})
-    .then((data) => {
-        res.json(data);
-        helpers.log({
-            message: "Successfully create post",
-            data
-        }, false);
-    })
-    .catch((error) => res.json(error));
+    console.log(req.cookies);
+    // helpers.createPost({...req.body, author: req.user.name})
+    // .then((data) => {
+    //     res.json(data);
+    //     helpers.log({
+    //         message: "Successfully create post",
+    //         data
+    //     }, false);
+    // })
+    // .catch((error) => res.json(error));
 });
 
 function authenticate(req, res, next) {
