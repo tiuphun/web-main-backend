@@ -17,7 +17,7 @@ const mime = {
     js: 'application/javascript'
 };
 
-const {base_url} = require("../config.json");
+const base_url = path.dirname(__dirname);
 
 Router.post("/login", (req, res) => {
 
