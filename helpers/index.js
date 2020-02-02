@@ -13,7 +13,7 @@ function getIP() {
         // }
         console.log(ifname);
         ifaces[ifname].forEach((iface) => {
-            if('IPv4' !== iface.family || iface.internal !== false) {
+            if ('IPv4' !== iface.family || iface.internal !== false) {
                 return;
             } else {
                 console.log(iface);
@@ -26,46 +26,46 @@ function getIP() {
     return IPs[0];
 }
 
-function log({message, data}, error) {
+function log({ message, data }, error) {
     let errorMessage = "There was an error!";
-    let successMessage = "Succeeded!"; 
-    console.log((error) ? errorMessage : successMessage); 
-    console.log(JSON.stringify(data)); 
+    let successMessage = "Succeeded!";
+    console.log((error) ? errorMessage : successMessage);
+    console.log(JSON.stringify(data));
 }
 
-function getPosts(dirs) { 
+function getPosts(dirs) {
     let promises = []; dirs.forEach((dir) => {
-        promises.push( fsPromises.readFile(
+        promises.push(fsPromises.readFile(
             `./public/posts/${dir}/data.json`,
             'utf8'
-        )); 
-    }) 
+        ));
+    })
     return promises;
 }
 
-function createPost({author, title, markdown}) {
-    let dirName = title.toLowerCase().split(' ').join('_'); 
-    return new Promise((resolve, reject) => { 
-        fsPromises.mkdir(`./public/posts/${dirName}`).then(() => { 
-            let promises = [ 
+function createPost({ author, title, markdown }) {
+    let dirName = title.toLowerCase().split(' ').join('_');
+    return new Promise((resolve, reject) => {
+        fsPromises.mkdir(`./public/posts/${dirName}`).then(() => {
+            let promises = [
                 // Create data.json file 
-                fsPromises.writeFile(`./public/posts/${dirName}/data.json`, 
+                fsPromises.writeFile(`./public/posts/${dirName}/data.json`,
                     JSON.stringify({ date: new Date(), author, title })
-                ), 
+                ),
                 // Create markdown file 
                 fsPromises.writeFile(
                     `./public/posts/${dirName}/index.md`,
                     markdown)
             ];
             Promise.all(promises)
-            .then((data) => resolve({
-                message: "Successfully create new post", 
-                title,
-                author
-            }));
+                .then((data) => resolve({
+                    message: "Successfully create new post",
+                    title,
+                    author
+                }));
         })
-        .catch((error) => reject(error))
-    })   
+            .catch((error) => reject(error))
+    })
 }
 
 function getPost(title) {
@@ -84,7 +84,7 @@ function getPost(title) {
 }
 
 function getEvents() {
-    return fsPromises.readdir("./public/events") 
+    return fsPromises.readdir("./public/events")
 }
 
 module.exports = {

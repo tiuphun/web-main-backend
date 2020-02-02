@@ -21,29 +21,29 @@ const base_url = path.dirname(__dirname);
 
 Router.get("/posts/:title", (req, res) => {
     helpers.getPost(req.params.title)
-    .then((post) => {
-        let metadata = JSON.parse(post[0]);
-        let html = converter.makeHtml(post[1].normalize());
-        res.json({html, metadata});
-    })
-    .catch(console.log);
+        .then((post) => {
+            let metadata = JSON.parse(post[0]);
+            let html = converter.makeHtml(post[1].normalize());
+            res.json({ html, metadata });
+        })
+        .catch(console.log);
 })
 
 Router.get("/events", (req, res) => {
     helpers.getEvents()
-    .then((data) => res.json(data))
-    .catch(console.log);
+        .then((data) => res.json(data))
+        .catch(console.log);
 });
 
 Router.get("/events/:name", (req, res) => {
     fsPromises.readFile(
         `./public/events/${req.params.name}/markdown/index.md`,
         'utf8')
-    .then((data) => {
-        let html = converter.makeHtml(data);
-        res.send(html);
-    })
-    .catch(console.log);
+        .then((data) => {
+            let html = converter.makeHtml(data);
+            res.send(html);
+        })
+        .catch(console.log);
 });
 
 Router.get("/public/*", (req, res) => {
