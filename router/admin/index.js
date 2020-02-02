@@ -2,10 +2,7 @@ const Router = require('express').Router();
 const request = require('request');
 const helpers = require('../../helpers');
 
-// Router.use(authenticate);
-
 Router.post("/login", (req, res) => {
-    console.log(JSON.stringify(req.body));
     let options = {
         url: 'http://localhost:4000/login',
         headers: {
@@ -28,7 +25,7 @@ Router.post("/login", (req, res) => {
 
 })
 
-Router.post("/posts", (req, res) => {
+Router.post("/posts", authenticate, (req, res) => {
     console.log(req.cookies);
     helpers.createPost({...req.body, author: req.user.name})
     .then((data) => {
@@ -43,7 +40,7 @@ Router.post("/posts", (req, res) => {
 
 function authenticate(req, res, next) {
     let options = {
-        url: 'http://localhost:4000/authenticate',
+        url: 'http://localhost:4000/verify',
         headers: {
             'Authorization': req.headers.authorization
         }
@@ -53,8 +50,14 @@ function authenticate(req, res, next) {
         if(err) {
             return res.sendStatus(400);
         }
-
-        let body = JSON.parse(response.body);
+        
+        let body;
+        try {
+             body = JSON.parse(response.body);
+        } catch(err) {
+            console.log9(err);
+            return res.sendStatus(400);
+        }
 
         if(!body.user) {
             return res.sendStatus(403);

@@ -18,6 +18,14 @@ const mime = {
 };
 
 const base_url = path.dirname(__dirname);
+Router.get("/posts", (req, res) => {
+    helpers.getPosts()
+        .then((post_titles) => res.json({posts: post_titles}))
+        .catch((err) => res.json({
+            err: "Cannot get posts",
+            message: err
+        }))
+})
 
 Router.get("/posts/:title", (req, res) => {
     helpers.getPost(req.params.title)
