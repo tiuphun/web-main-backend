@@ -1,10 +1,12 @@
 const Router = require("express").Router();
 const helpers = require("../helpers");
-const fs = require("fs"),
-    fsPromises = fs.promises,
-    path = require("path"),
-    showdown = require("showdown"),
-    converter = new showdown.Converter();
+const fs = require("fs");
+const fsPromises = fs.promises;
+const path = require("path");
+const showdown = require("showdown");
+const converter = new showdown.Converter();
+
+const { Post, Event } = require('../models');
 
 const mime = {
     html: 'text/html',
@@ -19,39 +21,47 @@ const mime = {
 
 const base_url = path.dirname(__dirname);
 Router.get("/posts", (req, res) => {
-    helpers.getPosts()
-        .then((post_titles) => res.json({posts: post_titles}))
-        .catch((err) => res.json({
-            err: "Cannot get posts",
-            message: err
-        }))
+    Post.find({})
+        .then(posts => res.json({posts}))
+        .catch(res.sendStatus(400));
 })
 
-Router.get("/posts/:title", (req, res) => {
-    helpers.getPost(req.params.title)
-        .then((post) => {
-            let metadata = JSON.parse(post[0]);
-            let html = converter.makeHtml(post[1].normalize());
-            res.json({ html, metadata });
-        })
-        .catch(console.log);
+Router.get("/posts/:id", (req, res) => {
+    Post.findById(req.params.id)
+        .then(post => res.json({post}))
+        .catch(console.log)
 })
 
 Router.get("/events", (req, res) => {
-    helpers.getEvents()
-        .then((data) => res.json(data))
-        .catch(console.log);
+    Event.find({}, (err, data) => {
+        if(err) {
+            return res.sendStatus(400);
+        } else {
+            return res.json({events: data});
+        }
+        
+    });
 });
 
-Router.get("/events/:name", (req, res) => {
-    fsPromises.readFile(
-        `./public/events/${req.params.name}/markdown/index.md`,
-        'utf8')
-        .then((data) => {
-            let html = converter.makeHtml(data);
-            res.send(html);
+Router.get("/events/:id", (req, res) => {
+    
+    Event.findById(req.params.id,
+        (err,data)=>{
+            if(err){
+                console.log(err);
+            }
+            res.json(data)
+            
         })
-        .catch(console.log);
+
+    // fsPromises.readFile(
+    //     `./public/events/${req.params.name}/markdown/index.md`,
+    //     'utf8')
+    //     .then((data) => {
+    //         let html = converter.makeHtml(data);
+    //         res.send(html);
+    //     })
+    //     .catch(console.log);
 });
 
 Router.get("/public/*", (req, res) => {
