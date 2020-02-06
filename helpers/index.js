@@ -2,6 +2,8 @@ const fs = require("fs"),
     fsPromises = fs.promises,
     os = require("os");
 
+const { Post } = require('../models');
+
 function getIP() {
     let ifaces = os.networkInterfaces();
 
@@ -37,39 +39,20 @@ function getPosts() {
     return fsPromises.readdir('./public/posts')
 }
 
-function createPost({ author, title, markdown }) {
-    let dirName = title.toLowerCase().split(' ').join('_');
-    return new Promise((resolve, reject) => {
-        fsPromises.mkdir(`./public/posts/${dirName}`)
-            .then(() => {
-                let promises = [
-                    // Create data.json file 
-                    fsPromises.writeFile(`./public/posts/${dirName}/data.json`,
-                        JSON.stringify({ date: new Date(), author, title })
-                    ),
-                    // Create markdown file 
-                    fsPromises.writeFile(
-                        `./public/posts/${dirName}/index.md`,
-                        markdown)
-                ];
-                Promise.all(promises)
-                    .then((data) => resolve({
-                        message: "Successfully create new post",
-                        title,
-                        author
-                    }));
-            })
-            .catch((error) => reject(error))
-    })
+function createPost(data) {
+    
 }
 
+// lat nua sua ca cai nay nua
 function getPost(title) {
     let dirName = title.toLowerCase().split(' ').join('_');
     let promises = [
+
         // fetch metadata
         fsPromises.readFile(
             `./public/posts/${dirName}/data.json`,
             'utf8'),
+
         // fetch content
         fsPromises.readFile(
             `./public/posts/${dirName}/index.md`,

@@ -1,5 +1,7 @@
 const Router = require('express').Router();
 const request = require('request');
+
+const { Post } = require('../../models');
 const helpers = require('../../helpers');
 
 Router.post("/login", (req, res) => {
@@ -25,17 +27,21 @@ Router.post("/login", (req, res) => {
 
 })
 
-Router.post("/posts", authenticate, (req, res) => {
-    console.log(req.cookies);
-    helpers.createPost({...req.body, author: req.user.name})
-    .then((data) => {
-        res.json(data);
-        helpers.log({
-            message: "Successfully create post",
-            data
-        }, false);
-    })
-    .catch((error) => res.json(error));
+Router.post("/posts",/* authorize,*/ (req, res) => {
+    Post.create(
+        {
+            ...req.body,
+            date: new Date()
+        }, 
+        (err, data) => {
+            if(err) {
+                return console.log(err);
+            }
+
+            console.log(data);
+            res.sendStatus(201);
+        }
+    )
 });
 
 function authenticate(req, res, next) {
@@ -55,7 +61,7 @@ function authenticate(req, res, next) {
         try {
              body = JSON.parse(response.body);
         } catch(err) {
-            console.log9(err);
+            console.log(err);
             return res.sendStatus(400);
         }
 
